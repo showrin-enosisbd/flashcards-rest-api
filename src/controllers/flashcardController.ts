@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { createFlashcard, getFlashcard } from "../services/flashcardService";
+import {
+    createFlashcard,
+    getFlashcardByID,
+    getFlashcards,
+} from "../services/flashcardService";
 
 export const createFlashcardHandler = async (req: Request, res: Response) => {
     try {
@@ -11,9 +15,20 @@ export const createFlashcardHandler = async (req: Request, res: Response) => {
     }
 };
 
-export const getFlashcardHandler = async (req: Request, res: Response) => {
+export const getFlashcardsHandler = async (req: Request, res: Response) => {
     try {
-        const flashcard = await getFlashcard(req.params.id);
+        const flashcards = await getFlashcards();
+
+        res.json(flashcards);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching flashcard");
+    }
+};
+
+export const getFlashcardByIDHandler = async (req: Request, res: Response) => {
+    try {
+        const flashcard = await getFlashcardByID(req.params.id);
         if (flashcard) {
             res.json(flashcard);
         } else {
